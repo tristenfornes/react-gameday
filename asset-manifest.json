@@ -1,0 +1,28 @@
+{
+  "files": {
+    "main.css": "/react-gameday/static/css/main.ae42da67.chunk.css",
+    "main.js": "/react-gameday/static/js/main.7b21dc5b.chunk.js",
+    "main.js.map": "/react-gameday/static/js/main.7b21dc5b.chunk.js.map",
+    "runtime~main.js": "/react-gameday/static/js/runtime~main.bb436cc5.js",
+    "runtime~main.js.map": "/react-gameday/static/js/runtime~main.bb436cc5.js.map",
+    "static/js/2.bf8dc853.chunk.js": "/react-gameday/static/js/2.bf8dc853.chunk.js",
+    "static/js/2.bf8dc853.chunk.js.map": "/react-gameday/static/js/2.bf8dc853.chunk.js.map",
+    "index.html": "/react-gameday/index.html",
+    "precache-manifest.5416c630f7d01bc37d04c596e5cefba5.js": "/react-gameday/precache-manifest.5416c630f7d01bc37d04c596e5cefba5.js",
+    "service-worker.js": "/react-gameday/service-worker.js",
+    "static/css/main.ae42da67.chunk.css.map": "/react-gameday/static/css/main.ae42da67.chunk.css.map",
+    "static/media/comingup.jpeg": "/react-gameday/static/media/comingup.21a37b8a.jpeg",
+    "static/media/fanreaction1.jpeg": "/react-gameday/static/media/fanreaction1.1e076e20.jpeg",
+    "static/media/fanreaction2.jpeg": "/react-gameday/static/media/fanreaction2.703e299c.jpeg",
+    "static/media/fanreaction3.jpeg": "/react-gameday/static/media/fanreaction3.c8ae1e46.jpeg",
+    "static/media/fanreaction4.jpeg": "/react-gameday/static/media/fanreaction4.d79eaef2.jpeg",
+    "static/media/founders.webp": "/react-gameday/static/media/founders.f844acf0.webp",
+    "static/media/goal.webp": "/react-gameday/static/media/goal.1d3039ec.webp",
+    "static/media/homee.jpeg": "/react-gameday/static/media/homee.77257210.jpeg",
+    "static/media/livenews1.jpeg": "/react-gameday/static/media/livenews1.65a202a0.jpeg",
+    "static/media/livenews2.jpeg": "/react-gameday/static/media/livenews2.ca5001cb.jpeg",
+    "static/media/livenews3.jpeg": "/react-gameday/static/media/livenews3.170cd422.jpeg",
+    "static/media/livenews4.jpeg": "/react-gameday/static/media/livenews4.a07b7791.jpeg",
+    "static/media/story.jpeg": "/react-gameday/static/media/story.24397418.jpeg"
+  }
+}
