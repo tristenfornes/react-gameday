@@ -1,0 +1,20 @@
+/* Fanzone Page Specific Styles */
+
+/* Fan Zone Sections */
+.fan-zone section {
+    margin-bottom: 2rem;
+    padding: 1rem;
+    background: #ffffff;
+    border: 1px solid var(--border-color);
+    border-radius: 5px;
+  }
+  
+  /* Grid for Fan Reactions & Games */
+  .reactions-grid,
+  .games-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 1rem;
+    margin-top: 1rem;
+  }
+  

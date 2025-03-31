@@ -1,0 +1,49 @@
+/* Home Page Specific Styles */
+
+/* Hero Section */
+.hero img {
+    width: 100%;
+    height: auto;
+  }
+  
+  .hero-text {
+    padding: 1rem;
+  }
+  
+  /* Latest News Section */
+  .latest-news {
+    margin-top: 2rem;
+  }
+  
+  .latest-news h2 {
+    font-size: 2em;
+    margin-bottom: 30px;
+    color: var(--header-bg-start);
+  }
+  
+  .news-container {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+  }
+  
+  .news-item {
+    background-color: #ffffff;
+    border: 1px solid var(--border-color);
+    border-radius: 5px;
+    padding: 15px;
+    text-align: center;
+  }
+  
+  .news-item img {
+    border-radius: 5px;
+    margin-bottom: 10px;
+  }
+  
+  /* Responsive for HomePage */
+  @media (max-width: 600px) {
+    .news-container {
+      grid-template-columns: 1fr;
+    }
+  }
+  
