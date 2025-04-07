@@ -4,7 +4,7 @@ import axios from 'axios';
 import './css/GameDetails.css';
 
 const GameDetails = () => {
-  const { id } = useParams(); // Assumes your route is "/game/:id"
+  const { id } = useParams(); // Expecting a route like "/game/:id"
   const [game, setGame] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -28,12 +28,32 @@ const GameDetails = () => {
 
   return (
     <div className="game-details">
-      <h2>{game.teamA} vs {game.teamB}</h2>
-      <p>Date: {game.date}</p>
-      <p>Location: {game.location}</p>
-      <img src={`/images/${game.img_name}`} alt={`${game.teamA} vs ${game.teamB}`} />
-      <p>{game.game_summary}</p>
-      {/* Add more details as needed */}
+      <h2>{game.teamA} vs {game.teamB} - {game.date}</h2>
+      
+      <section className="summary-section">
+        <h3>Game Summary</h3>
+        <p>{game.game_summary}</p>
+      </section>
+      
+      <section className="playbyplay-section">
+        <h3>Play-by-Play</h3>
+        <pre>{game.play_by_play}</pre>
+      </section>
+      
+      <section className="match-stats-section">
+        <h3>Match Stats</h3>
+        <ul>
+          {game.match_stats && Object.keys(game.match_stats).map((statKey) => (
+            <li key={statKey}>
+              {statKey.replace('_', ' ')}: {game.match_stats[statKey]}
+            </li>
+          ))}
+        </ul>
+      </section>
+      
+      <section className="image-section">
+        <img src={`/images/${game.img_name}`} alt={`${game.teamA} vs ${game.teamB}`} />
+      </section>
     </div>
   );
 };

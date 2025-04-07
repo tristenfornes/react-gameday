@@ -16,7 +16,7 @@ function App() {
         <Route path="/about" element={<AboutPage />} />
         <Route path="/fanzone" element={<FanzonePage />} />
         <Route path="/fixtures" element={<FixturesPage />} />
-        <Route path="/game" element={<GamePage />} />
+        <Route path="/game/:id" element={<GamePage />} />
       </Routes>
     </div>
   );

@@ -1,4 +1,6 @@
+// src/components/FixturesList.jsx
 import React, { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
 import axios from 'axios';
 import './css/FixturesList.css';
 
@@ -26,12 +28,17 @@ const FixturesList = () => {
   return (
     <div className="fixtures-list">
       {fixtures.map(fixture => (
-        <div key={fixture._id} className="fixture-item">
-          <h3>{fixture.teamA} vs {fixture.teamB}</h3>
-          <p>{fixture.date} at {fixture.location}</p>
-          <img src={`/images/${fixture.img_name}`} alt={`${fixture.teamA} vs ${fixture.teamB}`} />
-          <p>{fixture.game_summary}</p>
-        </div>
+        <Link key={fixture._id} to={`/game/${fixture._id}`} className="fixture-link">
+          <div className="fixture-item">
+            <h3>{fixture.teamA} vs {fixture.teamB}</h3>
+            <p>{fixture.date} at {fixture.location}</p>
+            <img 
+              src={`https://server-side-code-nqwa.onrender.com/images/${fixture.img_name}`} 
+              alt={`${fixture.teamA} vs ${fixture.teamB}`} 
+            />
+            <p>{fixture.game_summary}</p>
+          </div>
+        </Link>
       ))}
     </div>
   );
