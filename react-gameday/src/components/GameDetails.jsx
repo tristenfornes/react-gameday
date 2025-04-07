@@ -4,7 +4,7 @@ import axios from 'axios';
 import './css/GameDetails.css';
 
 const GameDetails = () => {
-  const { id } = useParams(); // Expecting a route like "/game/:id"
+  const { id } = useParams(); // Assumes route is "/game/:id"
   const [game, setGame] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -45,15 +45,12 @@ const GameDetails = () => {
         <ul>
           {game.match_stats && Object.keys(game.match_stats).map((statKey) => (
             <li key={statKey}>
-              {statKey.replace('_', ' ')}: {game.match_stats[statKey]}
+              {statKey.replace(/_/g, ' ')}: {game.match_stats[statKey]}
             </li>
           ))}
         </ul>
       </section>
       
-      <section className="image-section">
-        <img src={`/images/${game.img_name}`} alt={`${game.teamA} vs ${game.teamB}`} />
-      </section>
     </div>
   );
 };
