@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import axios from 'axios';
 import './css/FixturesList.css';
 
 const FixturesList = () => {
@@ -7,21 +8,14 @@ const FixturesList = () => {
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    // Replace with your live endpoint for fixtures
-    fetch('https://server-side-code-nqwa.onrender.com')
+    axios.get('https://server-side-code-nqwa.onrender.com/api/games')
       .then(response => {
-        if (!response.ok) {
-          throw new Error(`HTTP error! status: ${response.status}`);
-        }
-        return response.json();
-      })
-      .then(data => {
-        setFixtures(data);
+        setFixtures(response.data);
         setLoading(false);
       })
-      .catch(error => {
-        console.error('Error fetching fixtures:', error);
-        setError(error);
+      .catch(err => {
+        console.error('Error fetching fixtures:', err);
+        setError(err);
         setLoading(false);
       });
   }, []);
@@ -31,11 +25,12 @@ const FixturesList = () => {
 
   return (
     <div className="fixtures-list">
-      {fixtures.map((fixture, index) => (
-        <div key={index} className="fixture-item">
-          <h3>{fixture.match}</h3>
-          <p>{fixture.date}</p>
-          <p>{fixture.venue}</p>
+      {fixtures.map(fixture => (
+        <div key={fixture._id} className="fixture-item">
+          <h3>{fixture.teamA} vs {fixture.teamB}</h3>
+          <p>{fixture.date} at {fixture.location}</p>
+          <img src={`/images/${fixture.img_name}`} alt={`${fixture.teamA} vs ${fixture.teamB}`} />
+          <p>{fixture.game_summary}</p>
         </div>
       ))}
     </div>

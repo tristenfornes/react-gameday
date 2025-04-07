@@ -2,6 +2,7 @@
 import React from 'react';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
+import GameDetails from '../components/GameDetails'; // Import the GameDetails component
 import '../pages/css/GamePage.css';
 
 const GamePage = () => {
@@ -10,7 +11,7 @@ const GamePage = () => {
       <Header />
       <main>
         <section className="game-details">
-          {/* This section will be populated with the selected game's details */}
+          <GameDetails /> {/* Renders the game details based on the route parameter */}
         </section>
       </main>
       <Footer />
