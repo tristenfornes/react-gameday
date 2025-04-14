@@ -1,22 +1,24 @@
 /* src/pages/css/AddGamePage.css */
+
+.add-game-page-container {
+  background: linear-gradient(135deg, #FFEEAD, #FF6F61); /* Light, warm gradient background */
+  min-height: 100vh;
+  padding-bottom: 2rem;
+}
+
 .add-game-page {
-    max-width: 800px;
-    margin: 2rem auto;
-    padding: 2rem;
-    background: #ffffff;
-    border: 1px solid #ddd;
-    border-radius: 8px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  }
-  
-  .add-game-page h2 {
-    text-align: center;
-    margin-bottom: 1.5rem;
-    color: #1E88E5; /* Adjust to your preferred heading color */
-  }
-  
-  /* Optionally, if you want to style the form container inside this page further */
-  .add-game-page form {
-    margin-top: 1rem;
-  }
-  
+  max-width: 800px;
+  margin: 2rem auto;
+  padding: 2rem;
+  background: #ffffff;
+  border: 2px solid #FF6F61; /* Accent border */
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Optional heading styling if the form doesn't include one */
+.add-game-page h2 {
+  text-align: center;
+  margin-bottom: 1.5rem;
+  color: #FF6F61;
+}

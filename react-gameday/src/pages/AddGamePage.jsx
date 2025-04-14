@@ -7,10 +7,10 @@ import '../pages/css/AddGamePage.css';
 
 const AddGamePage = () => {
   return (
-    <div>
+    <div className="add-game-page-container">
       <Header />
       <main className="add-game-page">
-        <h2>Add a New Game</h2>
+        {/* The AddGameForm itself can include a heading if desired */}
         <AddGameForm />
       </main>
       <Footer />
