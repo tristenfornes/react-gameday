@@ -3,9 +3,45 @@ import React, { useState } from 'react';
 import axios from 'axios';
 import './css/AddGameForm.css';
 
+// Define the match stats configuration for each sport
+const sportStatsConfig = {
+  NFL: [
+    { name: 'total_yards', label: 'Total Yards', placeholder: 'e.g., 350-320' },
+    { name: 'turnovers', label: 'Turnovers', placeholder: 'e.g., 1-2' },
+    { name: 'penalty_yards', label: 'Penalty Yards', placeholder: 'e.g., 45-55' },
+    { name: 'time_of_possession', label: 'Time Of Possession', placeholder: 'e.g., 30:15-29:45' },
+  ],
+  NBA: [
+    { name: 'FG_percent', label: 'Field Goal %', placeholder: 'e.g., 48%-45%' },
+    { name: 'rebounds', label: 'Rebounds', placeholder: 'e.g., 42-38' },
+    { name: 'assists', label: 'Assists', placeholder: 'e.g., 25-23' },
+    { name: 'turnovers', label: 'Turnovers', placeholder: 'e.g., 12-15' },
+  ],
+  NHL: [
+    { name: 'shots_on_goal', label: 'Shots on Goal', placeholder: 'e.g., 35-32' },
+    { name: 'penalty_minutes', label: 'Penalty Minutes', placeholder: 'e.g., 8-10' },
+    { name: 'hits', label: 'Hits', placeholder: 'e.g., 12-9' },
+    { name: 'power_play_percentage', label: 'Power Play %', placeholder: 'e.g., 25%-20%' },
+  ],
+  MLB: [
+    { name: 'innings', label: 'Innings', placeholder: 'e.g., 9' },
+    { name: 'strikeouts', label: 'Strikeouts', placeholder: 'e.g., 12-10' },
+    { name: 'earned_run_average', label: 'ERA', placeholder: 'e.g., 2.85-3.20' },
+    { name: 'hits', label: 'Hits', placeholder: 'e.g., 8-9' },
+  ],
+  Soccer: [
+    { name: 'possession', label: 'Possession %', placeholder: 'e.g., 55%' },
+    { name: 'shots', label: 'Shots', placeholder: 'e.g., 15' },
+    { name: 'fouls', label: 'Fouls', placeholder: 'e.g., 12' },
+    { name: 'corners', label: 'Corners', placeholder: 'e.g., 7' },
+  ]
+};
+
 const AddGameForm = ({ onGameAdded }) => {
   const [formData, setFormData] = useState({
-    img_name: '',
+    sport: 'NFL',
+    // Remove the image input field and set a default image
+    img_name: 'default.jpeg',
     teamA: '',
     teamB: '',
     date: '',
@@ -18,16 +54,18 @@ const AddGameForm = ({ onGameAdded }) => {
   const [statusMessage, setStatusMessage] = useState('');
   const [statusType, setStatusType] = useState(''); // 'success' or 'error'
 
-  // Handle input changes for top-level fields
+  // Handle changes for all top-level fields (including sport)
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData(prev => ({
       ...prev,
-      [name]: value
+      [name]: value,
+      // Reset match_stats when sport changes
+      ...(name === 'sport' && { match_stats: {} })
     }));
   };
 
-  // Handle changes for match_stats fields separately if needed (example: you might have inputs for total_yards, turnovers, etc.)
+  // Handle changes for match_stats fields
   const handleStatsChange = (e) => {
     const { name, value } = e.target;
     setFormData(prev => ({
@@ -40,12 +78,16 @@ const AddGameForm = ({ onGameAdded }) => {
   };
 
   const validateForm = () => {
-    // Basic client-side validation (ensure required fields are filled)
-    const requiredFields = ['img_name', 'teamA', 'teamB', 'date', 'location', 'score', 'game_summary', 'play_by_play'];
+    // Basic client-side validation: ensure required fields are filled
+    const requiredFields = ['teamA', 'teamB', 'date', 'location', 'score', 'game_summary', 'play_by_play', 'sport'];
     for (let field of requiredFields) {
       if (!formData[field]) return false;
     }
-    // For match_stats, you can add additional validation if needed
+    // Optionally, ensure that each match stat field for the selected sport is filled
+    const statsForSport = sportStatsConfig[formData.sport] || [];
+    for (let stat of statsForSport) {
+      if (!formData.match_stats[stat.name]) return false;
+    }
     return true;
   };
 
@@ -65,9 +107,9 @@ const AddGameForm = ({ onGameAdded }) => {
       if (response.status === 201) {
         setStatusMessage('Game added successfully!');
         setStatusType('success');
-        // Optionally clear the form
         setFormData({
-          img_name: '',
+          sport: 'NFL',
+          img_name: 'default.jpeg',
           teamA: '',
           teamB: '',
           date: '',
@@ -77,7 +119,6 @@ const AddGameForm = ({ onGameAdded }) => {
           play_by_play: '',
           match_stats: {}
         });
-        // Notify parent (if needed) to update list
         if (onGameAdded) onGameAdded(response.data.game);
       }
     } catch (err) {
@@ -86,7 +127,6 @@ const AddGameForm = ({ onGameAdded }) => {
       setStatusType('error');
     }
 
-    // Clear the status message after 5 seconds
     setTimeout(() => {
       setStatusMessage('');
       setStatusType('');
@@ -97,16 +137,14 @@ const AddGameForm = ({ onGameAdded }) => {
     <form className="add-game-form" onSubmit={handleSubmit}>
       <h2>Add New Game</h2>
       
-      <label htmlFor="img_name">Image File Name:</label>
-      <input
-        type="text"
-        id="img_name"
-        name="img_name"
-        value={formData.img_name}
-        onChange={handleChange}
-        placeholder="e.g., lions.jpeg"
-        required
-      />
+      <label htmlFor="sport">Sport:</label>
+      <select id="sport" name="sport" value={formData.sport} onChange={handleChange} required>
+        {Object.keys(sportStatsConfig).map((sportOption) => (
+          <option key={sportOption} value={sportOption}>{sportOption}</option>
+        ))}
+      </select>
+      
+      {/* Removed the image input field */}
 
       <label htmlFor="teamA">Team A:</label>
       <input
@@ -177,42 +215,21 @@ const AddGameForm = ({ onGameAdded }) => {
       ></textarea>
 
       <fieldset>
-        <legend>Match Stats</legend>
-        <label htmlFor="total_yards">Total Yards:</label>
-        <input
-          type="text"
-          id="total_yards"
-          name="total_yards"
-          value={formData.match_stats.total_yards || ''}
-          onChange={handleStatsChange}
-        />
-
-        <label htmlFor="turnovers">Turnovers:</label>
-        <input
-          type="text"
-          id="turnovers"
-          name="turnovers"
-          value={formData.match_stats.turnovers || ''}
-          onChange={handleStatsChange}
-        />
-
-        <label htmlFor="penalty_yards">Penalty Yards:</label>
-        <input
-          type="text"
-          id="penalty_yards"
-          name="penalty_yards"
-          value={formData.match_stats.penalty_yards || ''}
-          onChange={handleStatsChange}
-        />
-
-        <label htmlFor="time_of_possession">Time of Possession:</label>
-        <input
-          type="text"
-          id="time_of_possession"
-          name="time_of_possession"
-          value={formData.match_stats.time_of_possession || ''}
-          onChange={handleStatsChange}
-        />
+        <legend>Match Stats for {formData.sport}</legend>
+        {sportStatsConfig[formData.sport].map(stat => (
+          <div key={stat.name}>
+            <label htmlFor={stat.name}>{stat.label}:</label>
+            <input
+              type="text"
+              id={stat.name}
+              name={stat.name}
+              placeholder={stat.placeholder}
+              value={formData.match_stats[stat.name] || ''}
+              onChange={handleStatsChange}
+              required
+            />
+          </div>
+        ))}
       </fieldset>
 
       <button type="submit">Add Game</button>
