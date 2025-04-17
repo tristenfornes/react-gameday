@@ -1,0 +1,121 @@
+/* src/pages/css/EditGamePage.css */
+
+/* Full-page gradient background */
+.edit-game-page {
+    min-height: 100vh;
+    padding: 2rem 1rem;
+    background: linear-gradient(135deg, #8E44AD, #3498DB);
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+  }
+  
+  /* Centered form container */
+  .edit-game-page form {
+    width: 100%;
+    max-width: 800px;
+    background: #ffffff;
+    border: 2px solid #3498DB;
+    border-radius: 8px;
+    padding: 2rem;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+  }
+  
+  /* Heading inside the form */
+  .edit-game-page form h2 {
+    margin-top: 0;
+    margin-bottom: 1.5rem;
+    text-align: center;
+    color: #8E44AD;
+    font-size: 2rem;
+  }
+  
+  /* Input, textarea, select styling */
+  .edit-game-page form label {
+    display: block;
+    margin: 0.5rem 0 0.25rem;
+    font-weight: bold;
+    color: #333;
+  }
+  
+  .edit-game-page form input,
+  .edit-game-page form textarea,
+  .edit-game-page form select {
+    width: 100%;
+    padding: 0.6rem;
+    margin-bottom: 1rem;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 1rem;
+  }
+  
+  /* Fieldset styling */
+  .edit-game-page form fieldset {
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    padding: 1rem;
+    margin-bottom: 1.5rem;
+  }
+  
+  .edit-game-page form legend {
+    padding: 0 0.5rem;
+    font-weight: bold;
+    color: #3498DB;
+  }
+  
+  /* Buttons */
+  .edit-game-page form button {
+    padding: 0.6rem 1.2rem;
+    margin-right: 0.5rem;
+    border: none;
+    border-radius: 4px;
+    font-size: 1rem;
+    cursor: pointer;
+  }
+  
+  .edit-game-page form button[type="submit"] {
+    background-color: #3498DB;
+    color: white;
+  }
+  
+  .edit-game-page form button[type="reset"] {
+    background-color: #E74C3C;
+    color: white;
+  }
+  
+  .edit-game-page form button:hover {
+    opacity: 0.9;
+  }
+  
+  /* Status message */
+  .edit-game-page .status-message {
+    margin-top: 1rem;
+    padding: 0.6rem;
+    text-align: center;
+    border-radius: 4px;
+    font-weight: bold;
+  }
+  
+  .edit-game-page .status-message.success {
+    background-color: #dff0d8;
+    color: #3c763d;
+  }
+  
+  .edit-game-page .status-message.error {
+    background-color: #f2dede;
+    color: #a94442;
+  }
+  
+  /* Responsive adjustments */
+  @media (max-width: 600px) {
+    .edit-game-page {
+      padding: 1rem;
+    }
+    .edit-game-page form {
+      padding: 1rem;
+    }
+    .edit-game-page form h2 {
+      font-size: 1.5rem;
+    }
+  }
+  

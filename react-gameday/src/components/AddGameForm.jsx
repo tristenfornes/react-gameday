@@ -1,47 +1,49 @@
 // src/components/AddGameForm.jsx
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 import './css/AddGameForm.css';
 
-// Define the match stats configuration for each sport
+// Stats configuration per sport
 const sportStatsConfig = {
   NFL: [
     { name: 'total_yards', label: 'Total Yards', placeholder: 'e.g., 350-320' },
     { name: 'turnovers', label: 'Turnovers', placeholder: 'e.g., 1-2' },
     { name: 'penalty_yards', label: 'Penalty Yards', placeholder: 'e.g., 45-55' },
-    { name: 'time_of_possession', label: 'Time Of Possession', placeholder: 'e.g., 30:15-29:45' },
+    { name: 'time_of_possession', label: 'Time of Possession', placeholder: 'e.g., 30:15-29:45' }
   ],
   NBA: [
     { name: 'FG_percent', label: 'Field Goal %', placeholder: 'e.g., 48%-45%' },
     { name: 'rebounds', label: 'Rebounds', placeholder: 'e.g., 42-38' },
     { name: 'assists', label: 'Assists', placeholder: 'e.g., 25-23' },
-    { name: 'turnovers', label: 'Turnovers', placeholder: 'e.g., 12-15' },
+    { name: 'turnovers', label: 'Turnovers', placeholder: 'e.g., 12-15' }
   ],
   NHL: [
     { name: 'shots_on_goal', label: 'Shots on Goal', placeholder: 'e.g., 35-32' },
     { name: 'penalty_minutes', label: 'Penalty Minutes', placeholder: 'e.g., 8-10' },
     { name: 'hits', label: 'Hits', placeholder: 'e.g., 12-9' },
-    { name: 'power_play_percentage', label: 'Power Play %', placeholder: 'e.g., 25%-20%' },
+    { name: 'power_play_percentage', label: 'Power Play %', placeholder: 'e.g., 25%-20%' }
   ],
   MLB: [
     { name: 'innings', label: 'Innings', placeholder: 'e.g., 9' },
     { name: 'strikeouts', label: 'Strikeouts', placeholder: 'e.g., 12-10' },
     { name: 'earned_run_average', label: 'ERA', placeholder: 'e.g., 2.85-3.20' },
-    { name: 'hits', label: 'Hits', placeholder: 'e.g., 8-9' },
+    { name: 'hits', label: 'Hits', placeholder: 'e.g., 8-9' }
   ],
   Soccer: [
-    { name: 'possession', label: 'Possession %', placeholder: 'e.g., 55%' },
+    { name: 'possession', label: 'Possession %', placeholder: 'e.g., 55%-45%' },
     { name: 'shots', label: 'Shots', placeholder: 'e.g., 15' },
     { name: 'fouls', label: 'Fouls', placeholder: 'e.g., 12' },
-    { name: 'corners', label: 'Corners', placeholder: 'e.g., 7' },
+    { name: 'corners', label: 'Corners', placeholder: 'e.g., 7' }
   ]
 };
 
-const AddGameForm = ({ onGameAdded }) => {
+const AddGameForm = ({ initialData = null, onGameAdded, isEdit = false }) => {
+  const navigate = useNavigate();
+
+  // Form state
   const [formData, setFormData] = useState({
-    sport: 'NFL',
-    // Remove the image input field and set a default image
-    img_name: 'default.jpeg',
+    sport: 'NFL',            // only used when adding
     teamA: '',
     teamB: '',
     date: '',
@@ -51,65 +53,86 @@ const AddGameForm = ({ onGameAdded }) => {
     play_by_play: '',
     match_stats: {}
   });
-  const [statusMessage, setStatusMessage] = useState('');
-  const [statusType, setStatusType] = useState(''); // 'success' or 'error'
+  const [status, setStatus] = useState({ message: '', type: '' });
 
-  // Handle changes for all top-level fields (including sport)
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData(prev => ({
-      ...prev,
-      [name]: value,
-      // Reset match_stats when sport changes
-      ...(name === 'sport' && { match_stats: {} })
-    }));
-  };
-
-  // Handle changes for match_stats fields
-  const handleStatsChange = (e) => {
-    const { name, value } = e.target;
-    setFormData(prev => ({
-      ...prev,
-      match_stats: {
-        ...prev.match_stats,
-        [name]: value
-      }
-    }));
-  };
-
-  const validateForm = () => {
-    // Basic client-side validation: ensure required fields are filled
-    const requiredFields = ['teamA', 'teamB', 'date', 'location', 'score', 'game_summary', 'play_by_play', 'sport'];
-    for (let field of requiredFields) {
-      if (!formData[field]) return false;
+  // Prefill in Edit mode
+  useEffect(() => {
+    if (initialData) {
+      setFormData({
+        sport: initialData.sport,
+        teamA: initialData.teamA,
+        teamB: initialData.teamB,
+        date: initialData.date,
+        location: initialData.location,
+        score: initialData.score,
+        game_summary: initialData.game_summary,
+        play_by_play: initialData.play_by_play,
+        match_stats: { ...initialData.match_stats }
+      });
     }
-    // Optionally, ensure that each match stat field for the selected sport is filled
-    const statsForSport = sportStatsConfig[formData.sport] || [];
-    for (let stat of statsForSport) {
-      if (!formData.match_stats[stat.name]) return false;
+  }, [initialData]);
+
+  // Handle change for simple fields
+  const handleChange = e => {
+    const { name, value } = e.target;
+    setFormData(prev => ({ ...prev, [name]: value }));
+  };
+
+  // Handle match_stats changes
+  const handleStatsChange = e => {
+    const { name, value } = e.target;
+    setFormData(prev => ({
+      ...prev,
+      match_stats: { ...prev.match_stats, [name]: value }
+    }));
+  };
+
+  // Basic client-side validation
+  const validate = () => {
+    const requiredFields = [
+      'teamA','teamB','date','location',
+      'score','game_summary','play_by_play'
+    ];
+    for (let f of requiredFields) {
+      if (!formData[f]) return false;
+    }
+    if (!isEdit) {
+      const stats = sportStatsConfig[formData.sport] || [];
+      for (let s of stats) {
+        if (!formData.match_stats[s.name]) return false;
+      }
+    } else {
+      for (let key of Object.keys(formData.match_stats)) {
+        if (!formData.match_stats[key]) return false;
+      }
     }
     return true;
   };
 
-  const handleSubmit = async (e) => {
+  // Submit handler
+  const handleSubmit = async e => {
     e.preventDefault();
-    setStatusMessage('');
-    setStatusType('');
+    setStatus({ message: '', type: '' });
 
-    if (!validateForm()) {
-      setStatusMessage('Please fill in all required fields.');
-      setStatusType('error');
+    if (!validate()) {
+      setStatus({ message: 'Please fill all required fields.', type: 'error' });
       return;
     }
 
     try {
-      const response = await axios.post('https://server-side-code-nqwa.onrender.com/api/games', formData);
-      if (response.status === 201) {
-        setStatusMessage('Game added successfully!');
-        setStatusType('success');
+      const url = isEdit
+        ? `https://server-side-code-nqwa.onrender.com/api/games/${initialData._id}`
+        : 'https://server-side-code-nqwa.onrender.com/api/games';
+      const method = isEdit ? 'put' : 'post';
+      const res = await axios[method](url, formData);
+
+      setStatus({ message: res.data.message, type: 'success' });
+      if (onGameAdded) onGameAdded(res.data.game);
+      if (isEdit) {
+        setTimeout(() => navigate('/fixtures'), 1000);
+      } else {
         setFormData({
           sport: 'NFL',
-          img_name: 'default.jpeg',
           teamA: '',
           teamB: '',
           date: '',
@@ -119,36 +142,40 @@ const AddGameForm = ({ onGameAdded }) => {
           play_by_play: '',
           match_stats: {}
         });
-        if (onGameAdded) onGameAdded(response.data.game);
       }
     } catch (err) {
-      console.error('Error adding game:', err);
-      setStatusMessage(err.response?.data?.error || 'Error adding game.');
-      setStatusType('error');
+      console.error(err);
+      const msg = err.response?.data?.error || 'Submission error.';
+      setStatus({ message: msg, type: 'error' });
     }
 
-    setTimeout(() => {
-      setStatusMessage('');
-      setStatusType('');
-    }, 5000);
+    setTimeout(() => setStatus({ message: '', type: '' }), 5000);
   };
 
   return (
     <form className="add-game-form" onSubmit={handleSubmit}>
-      <h2>Add New Game</h2>
-      
-      <label htmlFor="sport">Sport:</label>
-      <select id="sport" name="sport" value={formData.sport} onChange={handleChange} required>
-        {Object.keys(sportStatsConfig).map((sportOption) => (
-          <option key={sportOption} value={sportOption}>{sportOption}</option>
-        ))}
-      </select>
-      
-      {/* Removed the image input field */}
+      <h2>{isEdit ? 'Edit Game' : 'Add New Game'}</h2>
+
+      {/* Sport dropdown only in Add mode */}
+      {!isEdit && (
+        <>
+          <label htmlFor="sport">Sport:</label>
+          <select
+            id="sport"
+            name="sport"
+            value={formData.sport}
+            onChange={handleChange}
+            required
+          >
+            {Object.keys(sportStatsConfig).map(s => (
+              <option key={s} value={s}>{s}</option>
+            ))}
+          </select>
+        </>
+      )}
 
       <label htmlFor="teamA">Team A:</label>
       <input
-        type="text"
         id="teamA"
         name="teamA"
         value={formData.teamA}
@@ -158,7 +185,6 @@ const AddGameForm = ({ onGameAdded }) => {
 
       <label htmlFor="teamB">Team B:</label>
       <input
-        type="text"
         id="teamB"
         name="teamB"
         value={formData.teamB}
@@ -178,7 +204,6 @@ const AddGameForm = ({ onGameAdded }) => {
 
       <label htmlFor="location">Location:</label>
       <input
-        type="text"
         id="location"
         name="location"
         value={formData.location}
@@ -188,7 +213,6 @@ const AddGameForm = ({ onGameAdded }) => {
 
       <label htmlFor="score">Score:</label>
       <input
-        type="text"
         id="score"
         name="score"
         value={formData.score}
@@ -203,7 +227,7 @@ const AddGameForm = ({ onGameAdded }) => {
         value={formData.game_summary}
         onChange={handleChange}
         required
-      ></textarea>
+      />
 
       <label htmlFor="play_by_play">Play-by-Play:</label>
       <textarea
@@ -212,32 +236,58 @@ const AddGameForm = ({ onGameAdded }) => {
         value={formData.play_by_play}
         onChange={handleChange}
         required
-      ></textarea>
+      />
 
+      {/* Match Stats */}
       <fieldset>
-        <legend>Match Stats for {formData.sport}</legend>
-        {sportStatsConfig[formData.sport].map(stat => (
-          <div key={stat.name}>
-            <label htmlFor={stat.name}>{stat.label}:</label>
-            <input
-              type="text"
-              id={stat.name}
-              name={stat.name}
-              placeholder={stat.placeholder}
-              value={formData.match_stats[stat.name] || ''}
-              onChange={handleStatsChange}
-              required
-            />
-          </div>
-        ))}
+        <legend>
+          Match Stats {isEdit ? '' : `for ${formData.sport}`}
+        </legend>
+
+        {isEdit
+          ? Object.entries(formData.match_stats).map(([key, val]) => (
+              <div key={key}>
+                <label htmlFor={key}>
+                  {key.replace(/_/g, ' ')}:
+                </label>
+                <input
+                  id={key}
+                  name={key}
+                  value={val}
+                  onChange={handleStatsChange}
+                  required
+                />
+              </div>
+            ))
+          : (sportStatsConfig[formData.sport] || []).map(stat => (
+              <div key={stat.name}>
+                <label htmlFor={stat.name}>{stat.label}:</label>
+                <input
+                  id={stat.name}
+                  name={stat.name}
+                  placeholder={stat.placeholder}
+                  value={formData.match_stats[stat.name] || ''}
+                  onChange={handleStatsChange}
+                  required
+                />
+              </div>
+            ))
+        }
       </fieldset>
 
-      <button type="submit">Add Game</button>
-      <button type="reset">Cancel</button>
+      <button type="submit">
+        {isEdit ? 'Save Changes' : 'Add Game'}
+      </button>
+      <button
+        type="button"
+        onClick={() => navigate('/fixtures')}
+      >
+        Cancel
+      </button>
 
-      {statusMessage && (
-        <div className={`status-message ${statusType}`}>
-          {statusMessage}
+      {status.message && (
+        <div className={`status-message ${status.type}`}>
+          {status.message}
         </div>
       )}
     </form>

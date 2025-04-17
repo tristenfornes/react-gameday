@@ -1,47 +1,33 @@
-// src/components/FixturesList.jsx
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { Link } from 'react-router-dom';
-import axios from 'axios';
+import GameCard from './GameCard';
 import './css/FixturesList.css';
 
-const FixturesList = () => {
-  const [fixtures, setFixtures] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
-
-  useEffect(() => {
-    axios.get('https://server-side-code-nqwa.onrender.com/api/games')
-      .then(response => {
-        setFixtures(response.data);
-        setLoading(false);
-      })
-      .catch(err => {
-        console.error('Error fetching fixtures:', err);
-        setError(err);
-        setLoading(false);
-      });
-  }, []);
-
-  if (loading) return <div>Loading fixtures...</div>;
-  if (error) return <div>Error loading fixtures: {error.message}</div>;
-
-  return (
-    <div className="fixtures-list">
-      {fixtures.map(fixture => (
-        <Link key={fixture._id} to={`/game/${fixture._id}`} className="fixture-link">
-          <div className="fixture-item">
-            <h3>{fixture.teamA} vs {fixture.teamB}</h3>
-            <p>{fixture.date} at {fixture.location}</p>
-            <img 
-              src={`https://server-side-code-nqwa.onrender.com/images/${fixture.img_name}`} 
-              alt={`${fixture.teamA} vs ${fixture.teamB}`} 
-            />
-            <p>{fixture.game_summary}</p>
-          </div>
+const FixturesList = ({ games, onDelete }) => (
+  <div className="fixtures-list">
+    {games.map(game => (
+      <div key={game._id} className="fixture-item-wrapper">
+        <Link to={`/game/${game._id}`} className="fixture-link">
+          <GameCard
+            main_image={game.img_name}
+            teamA={game.teamA}
+            teamB={game.teamB}
+            date={game.date}
+            location={game.location}
+            game_summary={game.game_summary}
+          />
         </Link>
-      ))}
-    </div>
-  );
-};
+        <div className="fixture-actions">
+          <Link to={`/edit-game/${game._id}`} className="edit-btn">
+            Edit
+          </Link>
+          <button onClick={() => onDelete(game._id)} className="delete-btn">
+            Delete
+          </button>
+        </div>
+      </div>
+    ))}
+  </div>
+);
 
 export default FixturesList;
