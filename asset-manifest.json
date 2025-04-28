@@ -1,0 +1,22 @@
+{
+  "files": {
+    "main.css": "/react-gameday/static/css/main.8f9ccee4.css",
+    "main.js": "/react-gameday/static/js/main.044298d1.js",
+    "static/media/story.jpeg": "/react-gameday/static/media/story.055189c552487b8048d9.jpeg",
+    "static/media/homee.jpeg": "/react-gameday/static/media/homee.ab00b22a8765cc4cd443.jpeg",
+    "static/media/comingup.jpeg": "/react-gameday/static/media/comingup.88731d1148bbcc6eb6ed.jpeg",
+    "static/media/livenews1.jpeg": "/react-gameday/static/media/livenews1.0a38810acb76e225b999.jpeg",
+    "static/media/livenews4.jpeg": "/react-gameday/static/media/livenews4.647d0364aa74e9c39100.jpeg",
+    "static/media/founders.webp": "/react-gameday/static/media/founders.becc2885f7ddde96fffe.webp",
+    "static/media/livenews2.jpeg": "/react-gameday/static/media/livenews2.76c778a9eba091820254.jpeg",
+    "static/media/goal.webp": "/react-gameday/static/media/goal.412eeab0da961dd54d1b.webp",
+    "static/media/livenews3.jpeg": "/react-gameday/static/media/livenews3.4aec95fcf5f9828b0115.jpeg",
+    "index.html": "/react-gameday/index.html",
+    "main.8f9ccee4.css.map": "/react-gameday/static/css/main.8f9ccee4.css.map",
+    "main.044298d1.js.map": "/react-gameday/static/js/main.044298d1.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.8f9ccee4.css",
+    "static/js/main.044298d1.js"
+  ]
+}
