@@ -1,33 +1,41 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
-import GameCard from './GameCard';
+import React, { useEffect, useState } from 'react';
+import axios from 'axios';
 import './css/FixturesList.css';
 
-const FixturesList = ({ games, onDelete }) => (
-  <div className="fixtures-list">
-    {games.map(game => (
-      <div key={game._id} className="fixture-item-wrapper">
-        <Link to={`/game/${game._id}`} className="fixture-link">
-          <GameCard
-            main_image={game.img_name}
-            teamA={game.teamA}
-            teamB={game.teamB}
-            date={game.date}
-            location={game.location}
-            game_summary={game.game_summary}
-          />
-        </Link>
-        <div className="fixture-actions">
-          <Link to={`/edit-game/${game._id}`} className="edit-btn">
-            Edit
-          </Link>
-          <button onClick={() => onDelete(game._id)} className="delete-btn">
-            Delete
-          </button>
-        </div>
-      </div>
-    ))}
-  </div>
-);
+const API = process.env.REACT_APP_API_URL;
 
-export default FixturesList;
+export default function FixturesList() {
+  const [fixtures, setFixtures] = useState([]);
+  const [loading,  setLoading ] = useState(true);
+  const [error,    setError   ] = useState(null);
+
+  useEffect(() => {
+    axios.get(`${API}/api/games`)
+      .then(res => setFixtures(res.data))
+      .catch(err => setError(err))
+      .finally(() => setLoading(false));
+  }, []);
+
+  if (loading) return <p>Loading…</p>;
+  if (error)   return <p>Error: {error.message}</p>;
+
+  return (
+    <div className="fixtures-list">
+      {fixtures.map(game => (
+        <div key={game._id} className="fixture-item">
+          <img
+            src={`${API}/images/${game.img_name}`}
+            alt={`${game.teamA} vs ${game.teamB}`}
+          />
+          <div className="content">
+            <h3>{game.teamA} vs {game.teamB}</h3>
+            <p>{new Date(game.date).toLocaleDateString()} @ {game.location}</p>
+          </div>
+          <div className="fixture-actions">
+            {/* your Edit/Delete buttons here */}
+          </div>
+        </div>
+      ))}
+    </div>
+  );
+}

@@ -3,56 +3,52 @@ import { useParams } from 'react-router-dom';
 import axios from 'axios';
 import './css/GameDetails.css';
 
-const GameDetails = () => {
-  const { id } = useParams(); // Assumes route is "/game/:id"
-  const [game, setGame] = useState(null);
+const API = process.env.REACT_APP_API_URL;
+
+export default function GameDetails() {
+  const { id } = useParams();
+  const [game, setGame]     = useState(null);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+  const [error,   setError]   = useState(null);
 
   useEffect(() => {
-    axios.get(`https://server-side-code-nqwa.onrender.com/api/games/${id}`)
-      .then(response => {
-        setGame(response.data);
-        setLoading(false);
-      })
-      .catch(err => {
-        console.error('Error fetching game details:', err);
-        setError(err);
-        setLoading(false);
-      });
+    axios.get(`${API}/api/games/${id}`)
+      .then(res => setGame(res.data))
+      .catch(err => setError(err))
+      .finally(() => setLoading(false));
   }, [id]);
 
-  if (loading) return <div>Loading game details...</div>;
-  if (error) return <div>Error loading game details: {error.message}</div>;
-  if (!game) return <div>No game data available.</div>;
+  if (loading) return <p>Loading…</p>;
+  if (error)   return <p>Error: {error.message}</p>;
+  if (!game)   return <p>Game not found.</p>;
 
   return (
     <div className="game-details">
-      <h2>{game.teamA} vs {game.teamB} - {game.date}</h2>
-      
-      <section className="summary-section">
-        <h3>Game Summary</h3>
+      <h2>{game.teamA} vs {game.teamB}</h2>
+      <p><strong>Date:</strong> {new Date(game.date).toLocaleDateString()}</p>
+      <p><strong>Location:</strong> {game.location}</p>
+      <img
+        src={`${API}/images/${game.img_name}`}
+        alt={`${game.teamA} vs ${game.teamB}`}
+      />
+      <section>
+        <h3>Summary</h3>
         <p>{game.game_summary}</p>
       </section>
-      
-      <section className="playbyplay-section">
+      <section>
         <h3>Play-by-Play</h3>
-        <pre>{game.play_by_play}</pre>
+        <pre style={{ whiteSpace: 'pre-wrap' }}>{game.play_by_play}</pre>
       </section>
-      
-      <section className="match-stats-section">
+      <section className="game-stats">
         <h3>Match Stats</h3>
         <ul>
-          {game.match_stats && Object.keys(game.match_stats).map((statKey) => (
-            <li key={statKey}>
-              {statKey.replace(/_/g, ' ')}: {game.match_stats[statKey]}
+          {Array.from(game.match_stats.entries()).map(([key, val]) => (
+            <li key={key}>
+              <strong>{key.replace(/_/g, ' ')}:</strong> {val}
             </li>
           ))}
         </ul>
       </section>
-      
     </div>
   );
-};
-
-export default GameDetails;
+}
